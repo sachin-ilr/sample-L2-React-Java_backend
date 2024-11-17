@@ -61,5 +61,6 @@ public class SubjectServices {
 
         subjectRepo.deleteById(id);
         return ResponseEntity.ok("Subject deleted successfully");
+
     }
 }
