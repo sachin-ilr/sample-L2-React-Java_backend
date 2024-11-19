@@ -1,15 +1,11 @@
 package com.example.sample.entity;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import lombok.Data;
-
-//import org.apache.commons.math3.analysis.function.Identity;
+import java.time.LocalDateTime;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 @Data
@@ -32,17 +28,43 @@ public class Students {
     @Column(columnDefinition = "TEXT", name = "mobileno")
     private String mobileno;
 
-    // @NotBlank(message = "roleno is mandatory.")
-    @Column(columnDefinition = "TEXT", name = "roleno")
+    @Column(columnDefinition = "TEXT", name = "roleno", unique = true)
     private String roleno;
 
-    // @NotBlank(message = "classname is mandatory.")
+    @ManyToMany(mappedBy = "students", cascade = CascadeType.ALL)
+    private Set<Subject> subjects = new HashSet<>();
+
     @Column(columnDefinition = "TEXT", name = "classname")
     private String classname;
 
     @Column(columnDefinition = "TEXT", name = "address")
     private String address;
 
-}
+    @Column(name = "created_date", updatable = false)
+    private LocalDateTime createdDate;
 
-// R2024-(String.format("%04d",id)
+    @Column(name = "modified_date")
+    private LocalDateTime modifiedDate;
+
+    @PrePersist
+    protected void onCreate() {
+        createdDate = LocalDateTime.now();
+        modifiedDate = null;
+        this.roleno = generateRoleNo();
+    }
+
+    @PreUpdate
+    protected void onUpdate() {
+        modifiedDate = LocalDateTime.now();
+    }
+
+    private String generateRoleNo() {
+        return String.format("R2024%04d", id);
+    }
+
+    public void addSubject(Subject subject) {
+        subjects.add(subject);
+        subject.getStudents().add(this);
+    }
+
+}

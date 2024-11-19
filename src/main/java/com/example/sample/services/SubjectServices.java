@@ -12,7 +12,9 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
+import com.example.sample.entity.Students;
 import com.example.sample.entity.Subject;
+import com.example.sample.repository.StudentsRepository;
 import com.example.sample.repository.SubjectRepository;
 
 @Service
@@ -20,6 +22,29 @@ public class SubjectServices {
 
     @Autowired
     private SubjectRepository subjectRepo;
+
+    @Autowired
+    private StudentsRepository studentsRepo;
+
+    @Autowired
+    private StudentMasterService studentMasterService;
+
+    public ResponseEntity<String> addSubjectToStudent(Integer studentId, Subject subject) {
+        Optional<Students> studentOpt = studentsRepo.findById(studentId);
+        if (!studentOpt.isPresent()) {
+            return ResponseEntity.notFound().build();
+        }
+
+        Students student = studentOpt.get();
+        student.addSubject(subject);
+        subject.getStudents().add(student);
+
+        subjectRepo.save(subject);
+        studentsRepo.save(student);
+        studentMasterService.createOrUpdateStudentMaster(student);
+
+        return ResponseEntity.ok("Successfully added subject and updated Student Master");
+    }
 
     public ResponseEntity<Page<Subject>> getAll(Integer page, Integer size) {
         Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "id"));
@@ -39,7 +64,7 @@ public class SubjectServices {
 
     public ResponseEntity<String> subjectAddAll(List<Subject> subjects) {
         try {
-            subjectRepo.saveAll(subjects); // Save all subjects
+            subjectRepo.saveAll(subjects);
             return ResponseEntity.status(HttpStatus.CREATED).body("Successfully added all subjects");
         } catch (Exception e) {
             e.printStackTrace();
@@ -52,23 +77,23 @@ public class SubjectServices {
         if (subject.isPresent()) {
             return ResponseEntity.ok(subject.get());
         } else {
-            return ResponseEntity.notFound().build(); // HTTP 404
+            return ResponseEntity.notFound().build();
         }
     }
 
     public ResponseEntity<String> updateSubject(Integer id, Subject updatedSubject) {
         if (!subjectRepo.existsById(id)) {
-            return ResponseEntity.notFound().build(); // HTTP 404
+            return ResponseEntity.notFound().build();
         }
 
         updatedSubject.setId(id);
-        subjectRepo.save(updatedSubject); // Save the updated subject
+        subjectRepo.save(updatedSubject);
         return ResponseEntity.ok("Subject updated successfully");
     }
 
     public ResponseEntity<String> deleteSubject(Integer id) {
         if (!subjectRepo.existsById(id)) {
-            return ResponseEntity.notFound().build(); // HTTP 404
+            return ResponseEntity.notFound().build();
         }
 
         subjectRepo.deleteById(id);

@@ -20,6 +20,9 @@ public class StudentsServices {
     @Autowired
     private StudentsRepository studentsRepo;
 
+    @Autowired
+    private StudentMasterService studentMasterService;
+
     public ResponseEntity<Page<Students>> getAll(Integer page, Integer size) {
         Pageable pageable = PageRequest.of(page, size);
         Page<Students> studentsPage = studentsRepo.findAll(pageable);
@@ -33,7 +36,8 @@ public class StudentsServices {
     public ResponseEntity<String> studentsAdd(Students students) {
         try {
             studentsRepo.save(students);
-            return ResponseEntity.status(HttpStatus.CREATED).body("Student added successfully");
+            studentMasterService.createOrUpdateStudentMaster(students);
+            return ResponseEntity.status(HttpStatus.CREATED).body("Successfully added student");
         } catch (Exception e) {
             e.printStackTrace();
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to add student");

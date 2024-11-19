@@ -1,17 +1,13 @@
 package com.example.sample.entity;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
-import jakarta.validation.constraints.NotBlank;
+import jakarta.persistence.*;
 import lombok.Data;
+
+import java.time.LocalDateTime;
 
 @Entity
 @Data
-@Table(name = "studentMaster")
+@Table(name = "student_master")
 public class StudentMaster {
 
     @Id
@@ -28,7 +24,7 @@ public class StudentMaster {
     private String roleno;
 
     @Column(columnDefinition = "TEXT", name = "subjectname")
-    private String name;
+    private String subjectname;
 
     @Column(columnDefinition = "TEXT", name = "staffname")
     private String staffname;
@@ -36,10 +32,20 @@ public class StudentMaster {
     @Column(columnDefinition = "TEXT", name = "subjectcode")
     private String subjectcode;
 
-    @Column(columnDefinition = "DATE&TIME", name = "createddate")
-    private String createddate;
+    @Column(name = "created_date", updatable = false)
+    private LocalDateTime createdDate;
 
-    @Column(columnDefinition = "DATE&TIME", name = "modifieddate")
-    private String modifieddate;
+    @Column(name = "modified_date")
+    private LocalDateTime modifiedDate;
 
+    @PrePersist
+    protected void onCreate() {
+        createdDate = LocalDateTime.now();
+        modifiedDate = null;
+    }
+
+    @PreUpdate
+    protected void onUpdate() {
+        modifiedDate = LocalDateTime.now();
+    }
 }
