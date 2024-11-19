@@ -22,11 +22,6 @@ public class StudentsController {
         return studentsServ.getAll(page, size);
     }
 
-    @GetMapping("/all")
-    public ResponseEntity<?> selectAll() {
-        return studentsServ.selectAll();
-    }
-
     @PostMapping("/add")
     public ResponseEntity<?> studentsAdd(@RequestBody Students students) {
         return studentsServ.studentsAdd(students);

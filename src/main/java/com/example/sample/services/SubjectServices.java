@@ -1,5 +1,6 @@
 package com.example.sample.services;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,6 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import com.example.sample.entity.Subject;
@@ -20,7 +22,7 @@ public class SubjectServices {
     private SubjectRepository subjectRepo;
 
     public ResponseEntity<Page<Subject>> getAll(Integer page, Integer size) {
-        Pageable pageable = PageRequest.of(page, size);
+        Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "id"));
         Page<Subject> subjectPage = subjectRepo.findAll(pageable);
         return ResponseEntity.ok(subjectPage);
     }
@@ -32,6 +34,16 @@ public class SubjectServices {
         } catch (Exception e) {
             e.printStackTrace();
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to add subject");
+        }
+    }
+
+    public ResponseEntity<String> subjectAddAll(List<Subject> subjects) {
+        try {
+            subjectRepo.saveAll(subjects); // Save all subjects
+            return ResponseEntity.status(HttpStatus.CREATED).body("Successfully added all subjects");
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to add subjects");
         }
     }
 
@@ -50,7 +62,7 @@ public class SubjectServices {
         }
 
         updatedSubject.setId(id);
-        subjectRepo.save(updatedSubject);
+        subjectRepo.save(updatedSubject); // Save the updated subject
         return ResponseEntity.ok("Subject updated successfully");
     }
 
@@ -61,6 +73,5 @@ public class SubjectServices {
 
         subjectRepo.deleteById(id);
         return ResponseEntity.ok("Subject deleted successfully");
-
     }
 }

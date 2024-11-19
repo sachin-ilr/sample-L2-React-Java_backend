@@ -8,6 +8,8 @@ import com.example.sample.entity.Subject;
 import com.example.sample.services.SubjectServices;
 import org.springframework.data.domain.Page;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/subject")
 public class SubjectController {
@@ -25,6 +27,11 @@ public class SubjectController {
     @PostMapping("/add")
     public ResponseEntity<?> subjectAdd(@RequestBody Subject subject) {
         return subjectServ.subjectAdd(subject);
+    }
+
+    @PostMapping("/addAll")
+    public ResponseEntity<?> subjectAddAll(@RequestBody List<Subject> subjects) {
+        return subjectServ.subjectAddAll(subjects);
     }
 
     @GetMapping("/{id}")
