@@ -8,7 +8,6 @@ import com.example.sample.entity.Students;
 import com.example.sample.entity.Subject;
 import com.example.sample.repository.StudentMasterRepository;
 import com.example.sample.repository.StudentsRepository;
-import com.example.sample.repository.SubjectRepository;
 
 import java.util.List;
 import java.util.Optional;
@@ -21,9 +20,6 @@ public class StudentMasterService {
 
     @Autowired
     private StudentsRepository studentsRepo;
-
-    @Autowired
-    private SubjectRepository subjectRepo;
 
     public void createOrUpdateStudentMaster(Students student) {
         StudentMaster studentMaster = new StudentMaster();
@@ -46,7 +42,6 @@ public class StudentMasterService {
         }
 
         Students student = studentOpt.get();
-
         createOrUpdateStudentMaster(student);
 
         return ResponseEntity.ok("Subject added and Student Master updated successfully");
@@ -59,13 +54,9 @@ public class StudentMasterService {
         }
 
         Students student = studentOpt.get();
-        StudentMaster studentMaster = new StudentMaster();
-        studentMaster.setFirstname(student.getFirstname());
-        studentMaster.setLastname(student.getLastname());
-        studentMaster.setRoleno(student.getRoleno());
+        createOrUpdateStudentMaster(student);
 
-        studentMasterRepo.save(studentMaster);
-        return ResponseEntity.status(201).body("Successfully added student master");
+        return ResponseEntity.status(201).body("Successfully added or updated student master");
     }
 
     public ResponseEntity<List<StudentMaster>> getAll() {
@@ -87,6 +78,7 @@ public class StudentMasterService {
         if (!studentMasterRepo.existsById(id)) {
             return ResponseEntity.notFound().build();
         }
+
         updatedStudentMaster.setId(id);
         studentMasterRepo.save(updatedStudentMaster);
         return ResponseEntity.ok("Successfully updated student master");
@@ -96,6 +88,7 @@ public class StudentMasterService {
         if (!studentMasterRepo.existsById(id)) {
             return ResponseEntity.notFound().build();
         }
+
         studentMasterRepo.deleteById(id);
         return ResponseEntity.ok("Successfully deleted student master");
     }
