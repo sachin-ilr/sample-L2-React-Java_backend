@@ -36,6 +36,8 @@ public class StudentsServices {
     public ResponseEntity<String> studentsAdd(Students students) {
         try {
             studentsRepo.save(students);
+            students.setRoleno(students.generateRoleNo());
+            studentsRepo.save(students);
             studentMasterService.createOrUpdateStudentMaster(students);
             return ResponseEntity.status(HttpStatus.CREATED).body("Successfully added student");
         } catch (Exception e) {
@@ -58,23 +60,23 @@ public class StudentsServices {
         if (student.isPresent()) {
             return ResponseEntity.ok(student.get());
         } else {
-            return ResponseEntity.notFound().build(); // HTTP 404
+            return ResponseEntity.notFound().build();
         }
     }
 
     public ResponseEntity<String> updateStudent(Integer id, Students updatedStudent) {
         if (!studentsRepo.existsById(id)) {
-            return ResponseEntity.notFound().build(); // HTTP 404
+            return ResponseEntity.notFound().build();
         }
 
-        updatedStudent.setId(id); // Ensure the ID is set for the update
-        studentsRepo.save(updatedStudent); // Save the updated student
+        updatedStudent.setId(id);
+        studentsRepo.save(updatedStudent);
         return ResponseEntity.ok("Student updated successfully");
     }
 
     public ResponseEntity<String> deleteStudent(Integer id) {
         if (!studentsRepo.existsById(id)) {
-            return ResponseEntity.notFound().build(); // HTTP 404
+            return ResponseEntity.notFound().build();
         }
 
         studentsRepo.deleteById(id);

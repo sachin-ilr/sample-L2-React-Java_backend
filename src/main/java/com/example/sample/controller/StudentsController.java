@@ -42,3 +42,5 @@ public class StudentsController {
         return studentsServ.getStudentById(id);
     }
 }
+
+// thymeleaf

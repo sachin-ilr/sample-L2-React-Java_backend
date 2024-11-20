@@ -50,7 +50,6 @@ public class Students {
     protected void onCreate() {
         createdDate = LocalDateTime.now();
         modifiedDate = null;
-        this.roleno = generateRoleNo();
     }
 
     @PreUpdate
@@ -58,7 +57,7 @@ public class Students {
         modifiedDate = LocalDateTime.now();
     }
 
-    private String generateRoleNo() {
+    public String generateRoleNo() {
         return String.format("R2024%04d", id);
     }
 
@@ -66,5 +65,6 @@ public class Students {
         subjects.add(subject);
         subject.getStudents().add(this);
     }
-
 }
+
+// DTO
