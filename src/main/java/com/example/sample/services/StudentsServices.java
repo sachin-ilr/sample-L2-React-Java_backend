@@ -13,7 +13,6 @@ import org.springframework.stereotype.Service;
 
 import com.example.sample.dto.StudentsDTO;
 import com.example.sample.entity.Students;
-import com.example.sample.repository.StudentMasterRepository;
 import com.example.sample.repository.StudentsRepository;
 
 @Service
@@ -21,9 +20,6 @@ public class StudentsServices {
 
     @Autowired
     private StudentsRepository studentsRepo;
-
-    @Autowired
-    private StudentMasterRepository studentMasterRepo;
 
     public ResponseEntity<Page<Students>> getAll(Integer page, Integer size) {
         Pageable pageable = PageRequest.of(page, size);
