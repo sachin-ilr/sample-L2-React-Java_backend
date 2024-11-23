@@ -4,12 +4,11 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import com.example.sample.entity.Students;
@@ -26,9 +25,6 @@ public class SubjectServices {
     @Autowired
     private StudentsRepository studentsRepo;
 
-    @Autowired
-    private StudentMasterService studentMasterService;
-
     public ResponseEntity<String> addSubjectToStudent(Integer studentId, Subject subject) {
         Optional<Students> studentOpt = studentsRepo.findById(studentId);
         if (studentOpt.isEmpty()) {
@@ -37,15 +33,13 @@ public class SubjectServices {
 
         Students student = studentOpt.get();
 
-        // Handle relationship
         student.addSubject(subject);
         subject.getStudents().add(student);
 
         try {
             subjectRepo.save(subject);
             studentsRepo.save(student);
-            studentMasterService.createOrUpdateStudentMaster(student);
-            return ResponseEntity.ok("Successfully added subject and updated Student Master");
+            return ResponseEntity.ok("Successfully added subject to student");
         } catch (Exception e) {
             e.printStackTrace();
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to add subject to student");
@@ -53,25 +47,25 @@ public class SubjectServices {
     }
 
     public ResponseEntity<Page<Subject>> getAll(Integer page, Integer size) {
-        Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "id"));
+        Pageable pageable = PageRequest.of(page, size);
         Page<Subject> subjectPage = subjectRepo.findAll(pageable);
         return ResponseEntity.ok(subjectPage);
     }
 
-    public ResponseEntity<String> subjectAdd(Subject subject) {
+    public ResponseEntity<String> addSubject(Subject subject) {
         try {
             subjectRepo.save(subject);
-            return ResponseEntity.status(HttpStatus.CREATED).body("Successfully added subject");
+            return ResponseEntity.status(HttpStatus.CREATED).body("Subject added successfully");
         } catch (Exception e) {
             e.printStackTrace();
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to add subject");
         }
     }
 
-    public ResponseEntity<String> subjectAddAll(List<Subject> subjects) {
+    public ResponseEntity<String> addSubjects(List<Subject> subjects) {
         try {
             subjectRepo.saveAll(subjects);
-            return ResponseEntity.status(HttpStatus.CREATED).body("Successfully added all subjects");
+            return ResponseEntity.status(HttpStatus.CREATED).body("Subjects added successfully");
         } catch (Exception e) {
             e.printStackTrace();
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to add subjects");

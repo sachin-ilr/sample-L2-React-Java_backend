@@ -1,2 +1,17 @@
 package com.example.sample.dto;
-// DTO for Subject goes here...
+
+import jakarta.validation.constraints.NotBlank;
+import lombok.Data;
+
+@Data
+public class SubjectDTO {
+    private Integer id;
+
+    @NotBlank(message = "Subject name is mandatory")
+    private String name;
+
+    @NotBlank(message = "Staff name is mandatory")
+    private String staffname;
+
+    private String subjectcode;
+}
