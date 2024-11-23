@@ -31,19 +31,25 @@ public class SubjectServices {
 
     public ResponseEntity<String> addSubjectToStudent(Integer studentId, Subject subject) {
         Optional<Students> studentOpt = studentsRepo.findById(studentId);
-        if (!studentOpt.isPresent()) {
-            return ResponseEntity.notFound().build();
+        if (studentOpt.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Student not found");
         }
 
         Students student = studentOpt.get();
+
+        // Handle relationship
         student.addSubject(subject);
         subject.getStudents().add(student);
 
-        subjectRepo.save(subject);
-        studentsRepo.save(student);
-        studentMasterService.createOrUpdateStudentMaster(student);
-
-        return ResponseEntity.ok("Successfully added subject and updated Student Master");
+        try {
+            subjectRepo.save(subject);
+            studentsRepo.save(student);
+            studentMasterService.createOrUpdateStudentMaster(student);
+            return ResponseEntity.ok("Successfully added subject and updated Student Master");
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to add subject to student");
+        }
     }
 
     public ResponseEntity<Page<Subject>> getAll(Integer page, Integer size) {
@@ -74,16 +80,12 @@ public class SubjectServices {
 
     public ResponseEntity<Subject> getById(Integer id) {
         Optional<Subject> subject = subjectRepo.findById(id);
-        if (subject.isPresent()) {
-            return ResponseEntity.ok(subject.get());
-        } else {
-            return ResponseEntity.notFound().build();
-        }
+        return subject.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_FOUND).build());
     }
 
     public ResponseEntity<String> updateSubject(Integer id, Subject updatedSubject) {
         if (!subjectRepo.existsById(id)) {
-            return ResponseEntity.notFound().build();
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Subject not found");
         }
 
         updatedSubject.setId(id);
@@ -93,7 +95,7 @@ public class SubjectServices {
 
     public ResponseEntity<String> deleteSubject(Integer id) {
         if (!subjectRepo.existsById(id)) {
-            return ResponseEntity.notFound().build();
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Subject not found");
         }
 
         subjectRepo.deleteById(id);
