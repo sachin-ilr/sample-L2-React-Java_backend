@@ -6,6 +6,9 @@ import java.util.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -22,6 +25,19 @@ public class StudentsServices {
     @Autowired
     private StudentsRepository studentsRepo;
 
+    // Get all students with pagination
+    public Page<Students> getAll(Integer page, Integer size) {
+        Pageable pageable = PageRequest.of(page, size);
+        return studentsRepo.findAll(pageable);
+    }
+
+    // Get a student by ID
+    public ResponseEntity<Students> getById(Integer id) {
+        Optional<Students> studentOpt = studentsRepo.findById(id);
+        return studentOpt.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
+    }
+
+    // Get all students (no pagination)
     public ResponseEntity<List<Students>> getAllStudents() {
         try {
             List<Students> students = studentsRepo.findAll();
@@ -32,6 +48,7 @@ public class StudentsServices {
         }
     }
 
+    // Add a new student
     public ResponseEntity<String> addStudent(StudentsDTO studentsDTO) {
         try {
             Students student = new Students();
@@ -48,6 +65,7 @@ public class StudentsServices {
         }
     }
 
+    // Update a student
     public ResponseEntity<String> updateStudent(Integer id, StudentsDTO studentsDTO) {
         try {
             Optional<Students> existingStudentOpt = studentsRepo.findById(id);
@@ -68,6 +86,7 @@ public class StudentsServices {
         }
     }
 
+    // Delete a student
     public ResponseEntity<String> deleteStudent(Integer id) {
         try {
             if (!studentsRepo.existsById(id)) {
