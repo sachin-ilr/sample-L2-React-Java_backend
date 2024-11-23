@@ -4,16 +4,10 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
-import com.example.sample.entity.Students;
 import com.example.sample.entity.Subject;
-import com.example.sample.repository.StudentsRepository;
 import com.example.sample.repository.SubjectRepository;
 
 @Service
@@ -22,64 +16,34 @@ public class SubjectServices {
     @Autowired
     private SubjectRepository subjectRepo;
 
-    @Autowired
-    private StudentsRepository studentsRepo;
-
-    public ResponseEntity<String> addSubjectToStudent(Integer studentId, Subject subject) {
-        Optional<Students> studentOpt = studentsRepo.findById(studentId);
-        if (studentOpt.isEmpty()) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Student not found");
-        }
-
-        Students student = studentOpt.get();
-
-        student.addSubject(subject);
-        subject.getStudents().add(student);
-
+    public ResponseEntity<String> subjectAdd(Subject subject) {
         try {
             subjectRepo.save(subject);
-            studentsRepo.save(student);
-            return ResponseEntity.ok("Successfully added subject to student");
+            return ResponseEntity.status(201).body("Successfully added subject");
         } catch (Exception e) {
             e.printStackTrace();
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to add subject to student");
+            return ResponseEntity.status(500).body("Failed to add subject");
         }
     }
 
-    public ResponseEntity<Page<Subject>> getAll(Integer page, Integer size) {
-        Pageable pageable = PageRequest.of(page, size);
-        Page<Subject> subjectPage = subjectRepo.findAll(pageable);
-        return ResponseEntity.ok(subjectPage);
-    }
-
-    public ResponseEntity<String> addSubject(Subject subject) {
-        try {
-            subjectRepo.save(subject);
-            return ResponseEntity.status(HttpStatus.CREATED).body("Subject added successfully");
-        } catch (Exception e) {
-            e.printStackTrace();
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to add subject");
-        }
-    }
-
-    public ResponseEntity<String> addSubjects(List<Subject> subjects) {
+    public ResponseEntity<String> subjectAddAll(List<Subject> subjects) {
         try {
             subjectRepo.saveAll(subjects);
-            return ResponseEntity.status(HttpStatus.CREATED).body("Subjects added successfully");
+            return ResponseEntity.status(201).body("Successfully added all subjects");
         } catch (Exception e) {
             e.printStackTrace();
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to add subjects");
+            return ResponseEntity.status(500).body("Failed to add subjects");
         }
     }
 
     public ResponseEntity<Subject> getById(Integer id) {
         Optional<Subject> subject = subjectRepo.findById(id);
-        return subject.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_FOUND).build());
+        return subject.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.status(404).build());
     }
 
     public ResponseEntity<String> updateSubject(Integer id, Subject updatedSubject) {
         if (!subjectRepo.existsById(id)) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Subject not found");
+            return ResponseEntity.status(404).body("Subject not found");
         }
 
         updatedSubject.setId(id);
@@ -89,7 +53,7 @@ public class SubjectServices {
 
     public ResponseEntity<String> deleteSubject(Integer id) {
         if (!subjectRepo.existsById(id)) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Subject not found");
+            return ResponseEntity.status(404).body("Subject not found");
         }
 
         subjectRepo.deleteById(id);

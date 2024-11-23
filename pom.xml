@@ -90,6 +90,11 @@
             <artifactId>lombok</artifactId>
             <scope>provided</scope>
         </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-parent</artifactId>
+            <version>3.4.0</version> <!-- Update to the latest version -->
+        </dependency>
     </dependencies>
 
     <build>
