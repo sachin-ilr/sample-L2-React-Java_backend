@@ -3,10 +3,9 @@ package com.example.sample.services;
 import java.util.List;
 import java.util.Optional;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -18,61 +17,67 @@ import com.example.sample.repository.StudentsRepository;
 @Service
 public class StudentsServices {
 
+    private static final Logger logger = LoggerFactory.getLogger(StudentsServices.class);
+
     @Autowired
     private StudentsRepository studentsRepo;
 
-    public ResponseEntity<Page<Students>> getAll(Integer page, Integer size) {
-        Pageable pageable = PageRequest.of(page, size);
-        Page<Students> studentsPage = studentsRepo.findAll(pageable);
-        return ResponseEntity.ok(studentsPage);
+    public ResponseEntity<List<Students>> getAllStudents() {
+        try {
+            List<Students> students = studentsRepo.findAll();
+            return ResponseEntity.ok(students);
+        } catch (Exception e) {
+            logger.error("Error retrieving all students: {}", e.getMessage(), e);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
+        }
     }
 
-    public ResponseEntity<String> addStudent(StudentsDTO studentsDto) {
+    public ResponseEntity<String> addStudent(StudentsDTO studentsDTO) {
         try {
-            Students student = mapToEntity(studentsDto);
+            Students student = new Students();
+            student.setFirstname(studentsDTO.getFirstname());
+            student.setLastname(studentsDTO.getLastname());
+            student.setMobileno(studentsDTO.getMobileno());
+            student.setClassname(studentsDTO.getClassname());
+            student.setAddress(studentsDTO.getAddress());
             studentsRepo.save(student);
-            return ResponseEntity.status(HttpStatus.CREATED).body("Successfully added student");
+            return ResponseEntity.status(HttpStatus.CREATED).body("Student added successfully");
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error("Error adding student: {}", e.getMessage(), e);
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to add student");
         }
     }
 
-    public ResponseEntity<String> updateStudent(Integer id, StudentsDTO studentsDto) {
-        if (!studentsRepo.existsById(id)) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Student not found");
+    public ResponseEntity<String> updateStudent(Integer id, StudentsDTO studentsDTO) {
+        try {
+            Optional<Students> existingStudentOpt = studentsRepo.findById(id);
+            if (existingStudentOpt.isEmpty()) {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Student not found");
+            }
+            Students existingStudent = existingStudentOpt.get();
+            existingStudent.setFirstname(studentsDTO.getFirstname());
+            existingStudent.setLastname(studentsDTO.getLastname());
+            existingStudent.setMobileno(studentsDTO.getMobileno());
+            existingStudent.setClassname(studentsDTO.getClassname());
+            existingStudent.setAddress(studentsDTO.getAddress());
+            studentsRepo.save(existingStudent);
+            return ResponseEntity.ok("Student updated successfully");
+        } catch (Exception e) {
+            logger.error("Error updating student: {}", e.getMessage(), e);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to update student");
         }
-        Students updatedStudent = mapToEntity(studentsDto);
-        updatedStudent.setId(id);
-        studentsRepo.save(updatedStudent);
-        return ResponseEntity.ok("Successfully updated student");
-    }
-
-    public ResponseEntity<Students> getById(Integer id) {
-        Optional<Students> student = studentsRepo.findById(id);
-        return student.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_FOUND).build());
     }
 
     public ResponseEntity<String> deleteStudent(Integer id) {
-        if (!studentsRepo.existsById(id)) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Student not found");
+        try {
+            if (!studentsRepo.existsById(id)) {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Student not found");
+            }
+            studentsRepo.deleteById(id);
+            return ResponseEntity.ok("Student deleted successfully");
+        } catch (Exception e) {
+            logger.error("Error deleting student: {}", e.getMessage(), e);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to delete student");
         }
-        studentsRepo.deleteById(id);
-        return ResponseEntity.ok("Successfully deleted student");
-    }
-
-    public ResponseEntity<List<Students>> getAllStudents() {
-        List<Students> students = studentsRepo.findAll();
-        return ResponseEntity.ok(students);
-    }
-
-    private Students mapToEntity(StudentsDTO studentsDto) {
-        Students student = new Students();
-        student.setFirstname(studentsDto.getFirstname());
-        student.setLastname(studentsDto.getLastname());
-        student.setMobileno(studentsDto.getMobileno());
-        student.setClassname(studentsDto.getClassname());
-        student.setAddress(studentsDto.getAddress());
-        return student;
     }
 }
