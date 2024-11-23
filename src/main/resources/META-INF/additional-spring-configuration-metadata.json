@@ -1,0 +1,12 @@
+{"properties": [
+  {
+    "name": "pagination.default-size",
+    "type": "java.lang.String",
+    "description": "A description for 'pagination.default-size'"
+  },
+  {
+    "name": "pagination.default-page",
+    "type": "java.lang.String",
+    "description": "A description for 'pagination.default-page'"
+  }
+]}
