@@ -47,7 +47,7 @@ public class StudentsController {
     }
 
     // Add a new student
-    @PostMapping
+    @PostMapping("/add")
     public ResponseEntity<String> addStudent(@RequestBody StudentsDTO studentsDTO) {
         return studentsServ.addStudent(studentsDTO);
     }

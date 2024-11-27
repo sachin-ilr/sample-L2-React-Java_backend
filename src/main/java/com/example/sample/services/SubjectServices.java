@@ -19,6 +19,7 @@ public class SubjectServices {
     @Autowired
     private SubjectRepository subjectRepo;
 
+    @SuppressWarnings("CallToPrintStackTrace")
     public ResponseEntity<String> subjectAdd(Subject subject) {
         try {
             subjectRepo.save(subject);
@@ -29,6 +30,7 @@ public class SubjectServices {
         }
     }
 
+    @SuppressWarnings("CallToPrintStackTrace")
     public ResponseEntity<String> subjectAddAll(List<Subject> subjects) {
         try {
             subjectRepo.saveAll(subjects);
