@@ -8,17 +8,17 @@ public class StudentsDTO {
     private Integer id;
 
     @NotBlank(message = "First name is mandatory")
-    private String firstName;
+    private String firstname;
 
     @NotBlank(message = "Last name is mandatory")
-    private String lastName;
+    private String lastname;
 
     @NotBlank(message = "Mobile number is mandatory")
-    private String mobileNo;
+    private String mobileno;
 
-    private String roleNo;
+    private String roleno;
 
-    private String className;
+    private String classname;
 
     private String address;
 }

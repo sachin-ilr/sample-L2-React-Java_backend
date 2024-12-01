@@ -5,10 +5,10 @@ import lombok.Data;
 @Data
 public class StudentMasterDTO {
     private Integer id;
-    private String firstName;
-    private String lastName;
-    private String roleNo;
-    private String subjectName;
-    private String staffName;
-    private String subjectCode;
+    private String firstname;
+    private String lastname;
+    private String roleno;
+    private String subjectname;
+    private String staffname;
+    private String subjectcode;
 }

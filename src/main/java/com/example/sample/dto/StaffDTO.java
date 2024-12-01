@@ -11,10 +11,10 @@ public class StaffDTO {
     private String name;
 
     @NotBlank(message = "Mobile number is mandatory")
-    private String mobileNo;
+    private String mobileno;
 
     private String address;
 
     @NotBlank(message = "Subject expertise is mandatory")
-    private String subjectExpert;
+    private String subjectexpert;
 }

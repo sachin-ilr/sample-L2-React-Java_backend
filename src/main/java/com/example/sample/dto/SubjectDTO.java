@@ -11,7 +11,7 @@ public class SubjectDTO {
     private String name;
 
     @NotBlank(message = "Staff name is mandatory")
-    private String staffName;
+    private String staffNnme;
 
-    private String subjectCode;
+    private String subjectcode;
 }
