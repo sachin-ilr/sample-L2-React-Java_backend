@@ -23,17 +23,17 @@ public class Subject extends BaseEntity {
     private String name;
 
     @NotBlank(message = "Staff name is mandatory")
-    @Column(name = "staffname")
+    @Column(name = "staff_name")
     private String staffName;
 
-    @Column(name = "subjectcode")
+    @Column(name = "subject_code")
     private String subjectCode;
 
     @ManyToMany
     @JoinTable(
-        name = "studentsubject",
-        joinColumns = @JoinColumn(name = "subjectid"),
-        inverseJoinColumns = @JoinColumn(name = "studentid")
+        name = "student_subject",
+        joinColumns = @JoinColumn(name = "subject_id"),
+        inverseJoinColumns = @JoinColumn(name = "student_id")
     )
     private Set<Students> students = new HashSet<>();
 }

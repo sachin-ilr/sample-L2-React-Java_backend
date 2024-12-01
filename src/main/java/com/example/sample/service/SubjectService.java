@@ -67,22 +67,22 @@ public class SubjectService implements BaseService<Subject, SubjectDTO, Integer>
         SubjectDTO dto = new SubjectDTO();
         dto.setId(subject.getId());
         dto.setName(subject.getName());
-        dto.setName(subject.getStaffName());
-        dto.setSubjectcode(subject.getSubjectCode());
+        dto.setStaffName(subject.getStaffName());
+        dto.setSubjectCode(subject.getSubjectCode());
         return dto;
     }
-
+    
     private Subject convertToEntity(SubjectDTO dto) {
         Subject subject = new Subject();
         subject.setName(dto.getName());
-        subject.setStaffName(dto.getName());
-        subject.setSubjectCode(dto.getSubjectcode());
+        subject.setStaffName(dto.getStaffName());
+        subject.setSubjectCode(dto.getSubjectCode());
         return subject;
     }
 
     private void updateSubjectFromDTO(Subject subject, SubjectDTO dto) {
         subject.setName(dto.getName());
         subject.setStaffName(dto.getName());
-        subject.setSubjectCode(dto.getSubjectcode());
+        subject.setSubjectCode(dto.getSubjectCode());
     }
 }

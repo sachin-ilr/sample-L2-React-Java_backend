@@ -67,25 +67,25 @@ public class StaffService implements BaseService<Staff, StaffDTO, Integer> {
         StaffDTO dto = new StaffDTO();
         dto.setId(staff.getId());
         dto.setName(staff.getName());
-        dto.setMobileno(staff.getMobileNo());
+        dto.setMobileNo(staff.getMobileNo());
         dto.setAddress(staff.getAddress());
-        dto.setSubjectexpert(staff.getSubjectExpert());
+        dto.setSubjectExpert(staff.getSubjectExpert());
         return dto;
     }
-
+    
     private Staff convertToEntity(StaffDTO dto) {
         Staff staff = new Staff();
         staff.setName(dto.getName());
-        staff.setMobileNo(dto.getMobileno());
+        staff.setMobileNo(dto.getMobileNo());
         staff.setAddress(dto.getAddress());
-        staff.setSubjectExpert(dto.getSubjectexpert());
+        staff.setSubjectExpert(dto.getSubjectExpert());
         return staff;
     }
 
     private void updateStaffFromDTO(Staff staff, StaffDTO dto) {
         staff.setName(dto.getName());
-        staff.setMobileNo(dto.getMobileno());
+        staff.setMobileNo(dto.getMobileNo());
         staff.setAddress(dto.getAddress());
-        staff.setSubjectExpert(dto.getSubjectexpert());
+        staff.setSubjectExpert(dto.getSubjectExpert());
     }
 }

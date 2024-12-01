@@ -1,8 +1,6 @@
 package com.example.sample.entity;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import lombok.Getter;
 import lombok.Setter;
@@ -17,13 +15,13 @@ public class Staff extends BaseEntity {
     private String name;
 
     @NotBlank(message = "Mobile number is mandatory")
-    @Column(name = "mobileno")
+    @Column(name = "mobile_no")
     private String mobileNo;
 
     @Column(name = "address")
     private String address;
 
     @NotBlank(message = "Subject expertise is mandatory")
-    @Column(name = "subjectexpert")
+    @Column(name = "subject_expert")
     private String subjectExpert;
 }

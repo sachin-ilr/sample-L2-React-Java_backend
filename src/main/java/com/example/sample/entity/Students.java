@@ -18,35 +18,31 @@ import lombok.Setter;
 @Table(name = "students")
 public class Students extends BaseEntity {
     @NotBlank(message = "First name is mandatory")
-    @Column(name = "firstname")
+    @Column(name = "first_name")
     private String firstName;
 
     @NotBlank(message = "Last name is mandatory")
-    @Column(name = "lastname")
+    @Column(name = "last_name")
     private String lastName;
 
     @NotBlank(message = "Mobile number is mandatory")
-    @Column(name = "mobileno")
+    @Column(name = "mobile_no")
     private String mobileNo;
 
-    @Column(name = "roleno", unique = true)
+    @Column(name = "role_no", unique = true)
     private String roleNo;
 
-    @ManyToMany(mappedBy = "students", cascade = CascadeType.ALL)
-    private Set<Subject> subjects = new HashSet<>();
-
-    @Column(name = "classname")
+    @Column(name = "class_name")
     private String className;
 
     @Column(name = "address")
     private String address;
 
+    @ManyToMany(mappedBy = "students", cascade = CascadeType.ALL)
+    private Set<Subject> subjects = new HashSet<>();
+
     public void addSubject(Subject subject) {
         subjects.add(subject);
         subject.getStudents().add(this);
-    }
-
-    public String generateRoleNo() {
-        return String.format("R2024%04d", getId());
     }
 }
