@@ -1,51 +1,31 @@
 package com.example.sample.entity;
 
-import jakarta.persistence.*;
-import lombok.Data;
-
-import java.time.LocalDateTime;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Table;
+import lombok.Getter;
+import lombok.Setter;
 
 @Entity
-@Data
+@Getter
+@Setter
 @Table(name = "student_master")
-public class StudentMaster {
+public class StudentMaster extends BaseEntity {
+    @Column(name = "first_name")
+    private String firstName;
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+    @Column(name = "last_name")
+    private String lastName;
 
-    @Column(columnDefinition = "TEXT", name = "firstname")
-    private String firstname;
+    @Column(name = "role_no")
+    private String roleNo;
 
-    @Column(columnDefinition = "TEXT", name = "lastname")
-    private String lastname;
+    @Column(name = "subject_name")
+    private String subjectName;
 
-    @Column(columnDefinition = "TEXT", name = "roleno")
-    private String roleno;
+    @Column(name = "staff_name")
+    private String staffName;
 
-    @Column(columnDefinition = "TEXT", name = "subjectname")
-    private String subjectname;
-
-    @Column(columnDefinition = "TEXT", name = "staffname")
-    private String staffname;
-
-    @Column(columnDefinition = "TEXT", name = "subjectcode")
-    private String subjectcode;
-
-    @Column(name = "created_date", updatable = false)
-    private LocalDateTime createdDate;
-
-    @Column(name = "modified_date")
-    private LocalDateTime modifiedDate;
-
-    @PrePersist
-    protected void onCreate() {
-        createdDate = LocalDateTime.now();
-        modifiedDate = null;
-    }
-
-    @PreUpdate
-    protected void onUpdate() {
-        modifiedDate = LocalDateTime.now();
-    }
+    @Column(name = "subject_code")
+    private String subjectCode;
 }

@@ -1,9 +1,8 @@
 package com.example.sample.controller;
 
-import java.util.List;
-
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -15,45 +14,51 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.example.sample.entity.Subject;
-import com.example.sample.services.SubjectServices;
+import com.example.sample.dto.SubjectDTO;
+import com.example.sample.service.SubjectService;
+
+import jakarta.validation.Valid;
 
 @RestController
-@RequestMapping("/subject")
+@RequestMapping("/api/subjects")
 public class SubjectController {
 
-    @Autowired
-    private SubjectServices subjectServ;
+    private final SubjectService subjectService;
 
-    @GetMapping("/all")
-    public ResponseEntity<Page<Subject>> getAll(
-            @RequestParam(defaultValue = "0") Integer page,
-            @RequestParam(defaultValue = "10") Integer size) {
-        return subjectServ.getAll(page, size);
+    public SubjectController(SubjectService subjectService) {
+        this.subjectService = subjectService;
     }
 
-    @PostMapping("/add")
-    public ResponseEntity<?> subjectAdd(@RequestBody Subject subject) {
-        return subjectServ.subjectAdd(subject);
-    }
-
-    @PostMapping("/addAll")
-    public ResponseEntity<?> subjectAddAll(@RequestBody List<Subject> subjects) {
-        return subjectServ.subjectAddAll(subjects);
+    @GetMapping
+    public ResponseEntity<Page<SubjectDTO>> getAllSubjects(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size) {
+        Page<SubjectDTO> subjectsPage = subjectService.findAll(PageRequest.of(page, size));
+        return ResponseEntity.ok(subjectsPage);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Subject> getSubjectById(@PathVariable Integer id) {
-        return subjectServ.getById(id);
+    public ResponseEntity<SubjectDTO> getSubjectById(@PathVariable Integer id) {
+        return subjectService.findById(id)
+                .map(ResponseEntity::ok)
+                .orElse(ResponseEntity.notFound().build());
     }
 
-    @PutMapping("/update/{id}")
-    public ResponseEntity<String> updateSubject(@PathVariable Integer id, @RequestBody Subject subject) {
-        return subjectServ.updateSubject(id, subject);
+    @PostMapping
+    public ResponseEntity<SubjectDTO> createSubject(@Valid @RequestBody SubjectDTO subjectDTO) {
+        SubjectDTO createdSubject = subjectService.save(subjectDTO);
+        return ResponseEntity.status(HttpStatus.CREATED).body(createdSubject);
     }
 
-    @DeleteMapping("/delete/{id}")
-    public ResponseEntity<String> deleteSubject(@PathVariable("id") Integer id) {
-        return subjectServ.deleteSubject(id);
+    @PutMapping("/{id}")
+    public ResponseEntity<SubjectDTO> updateSubject(@PathVariable Integer id, @Valid @RequestBody SubjectDTO subjectDTO) {
+        SubjectDTO updatedSubject = subjectService.update(id, subjectDTO);
+        return ResponseEntity.ok(updatedSubject);
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteSubject(@PathVariable Integer id) {
+        subjectService.deleteById(id);
+        return ResponseEntity.noContent().build();
     }
 }

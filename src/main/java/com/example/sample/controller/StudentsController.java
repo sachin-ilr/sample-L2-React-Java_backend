@@ -1,9 +1,8 @@
 package com.example.sample.controller;
 
-import java.util.List;
-
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -16,51 +15,50 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.sample.dto.StudentsDTO;
-import com.example.sample.entity.Students;
-import com.example.sample.services.StudentsServices;
+import com.example.sample.service.StudentsService;
+
+import jakarta.validation.Valid;
 
 @RestController
 @RequestMapping("/api/students")
 public class StudentsController {
 
-    @Autowired
-    private StudentsServices studentsServ;
+    private final StudentsService studentsService;
 
-    // Get all students with pagination
+    public StudentsController(StudentsService studentsService) {
+        this.studentsService = studentsService;
+    }
+
     @GetMapping
-    public ResponseEntity<Page<Students>> getAll(@RequestParam(defaultValue = "0") Integer page,
-                                                 @RequestParam(defaultValue = "10") Integer size) {
-        Page<Students> students = studentsServ.getAll(page, size);
-        return ResponseEntity.ok(students);
+    public ResponseEntity<Page<StudentsDTO>> getAllStudents(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size) {
+        Page<StudentsDTO> studentsPage = studentsService.findAll(PageRequest.of(page, size));
+        return ResponseEntity.ok(studentsPage);
     }
 
-    // Get a student by ID
     @GetMapping("/{id}")
-    public ResponseEntity<Students> getById(@PathVariable Integer id) {
-        return studentsServ.getById(id);
+    public ResponseEntity<StudentsDTO> getStudentById(@PathVariable Integer id) {
+        return studentsService.findById(id)
+                .map(ResponseEntity::ok)
+                .orElse(ResponseEntity.notFound().build());
     }
 
-    // Get all students (no pagination)
-    @GetMapping("/all")
-    public ResponseEntity<List<Students>> getAllStudents() {
-        return studentsServ.getAllStudents();
+    @PostMapping
+    public ResponseEntity<StudentsDTO> createStudent(@Valid @RequestBody StudentsDTO studentsDTO) {
+        StudentsDTO createdStudent = studentsService.save(studentsDTO);
+        return ResponseEntity.status(HttpStatus.CREATED).body(createdStudent);
     }
 
-    // Add a new student
-    @PostMapping("/add")
-    public ResponseEntity<String> addStudent(@RequestBody StudentsDTO studentsDTO) {
-        return studentsServ.addStudent(studentsDTO);
-    }
-
-    // Update a student
     @PutMapping("/{id}")
-    public ResponseEntity<String> updateStudent(@PathVariable Integer id, @RequestBody StudentsDTO studentsDTO) {
-        return studentsServ.updateStudent(id, studentsDTO);
+    public ResponseEntity<StudentsDTO> updateStudent(@PathVariable Integer id, @Valid @RequestBody StudentsDTO studentsDTO) {
+        StudentsDTO updatedStudent = studentsService.update(id, studentsDTO);
+        return ResponseEntity.ok(updatedStudent);
     }
 
-    // Delete a student
     @DeleteMapping("/{id}")
-    public ResponseEntity<String> deleteStudent(@PathVariable Integer id) {
-        return studentsServ.deleteStudent(id);
+    public ResponseEntity<Void> deleteStudent(@PathVariable Integer id) {
+        studentsService.deleteById(id);
+        return ResponseEntity.noContent().build();
     }
 }

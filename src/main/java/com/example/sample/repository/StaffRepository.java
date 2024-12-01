@@ -7,5 +7,4 @@ import com.example.sample.entity.Staff;
 
 @Repository
 public interface StaffRepository extends JpaRepository<Staff, Integer> {
-
 }
