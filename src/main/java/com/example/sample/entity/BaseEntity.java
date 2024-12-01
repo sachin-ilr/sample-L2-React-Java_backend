@@ -20,10 +20,10 @@ public abstract class BaseEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @Column(name = "created_date", updatable = false)
+    @Column(name = "createddate", updatable = false)
     private LocalDateTime createdDate;
 
-    @Column(name = "modified_date")
+    @Column(name = "modifieddate")
     private LocalDateTime modifiedDate;
 
     @PrePersist

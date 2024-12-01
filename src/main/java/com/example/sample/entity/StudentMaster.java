@@ -11,21 +11,21 @@ import lombok.Setter;
 @Setter
 @Table(name = "student_master")
 public class StudentMaster extends BaseEntity {
-    @Column(name = "first_name")
+    @Column(name = "firstname")
     private String firstName;
 
-    @Column(name = "last_name")
+    @Column(name = "lastname")
     private String lastName;
 
-    @Column(name = "role_no")
+    @Column(name = "roleno")
     private String roleNo;
 
-    @Column(name = "subject_name")
+    @Column(name = "subjectname")
     private String subjectName;
 
-    @Column(name = "staff_name")
+    @Column(name = "staffname")
     private String staffName;
 
-    @Column(name = "subject_code")
+    @Column(name = "subjectcode")
     private String subjectCode;
 }

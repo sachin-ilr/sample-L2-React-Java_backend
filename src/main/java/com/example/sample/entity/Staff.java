@@ -17,13 +17,13 @@ public class Staff extends BaseEntity {
     private String name;
 
     @NotBlank(message = "Mobile number is mandatory")
-    @Column(name = "mobile_no")
+    @Column(name = "mobileno")
     private String mobileNo;
 
     @Column(name = "address")
     private String address;
 
     @NotBlank(message = "Subject expertise is mandatory")
-    @Column(name = "subject_expert")
+    @Column(name = "subjectexpert")
     private String subjectExpert;
 }

@@ -18,24 +18,24 @@ import lombok.Setter;
 @Table(name = "students")
 public class Students extends BaseEntity {
     @NotBlank(message = "First name is mandatory")
-    @Column(name = "first_name")
+    @Column(name = "firstname")
     private String firstName;
 
     @NotBlank(message = "Last name is mandatory")
-    @Column(name = "last_name")
+    @Column(name = "lastname")
     private String lastName;
 
     @NotBlank(message = "Mobile number is mandatory")
-    @Column(name = "mobile_no")
+    @Column(name = "mobileno")
     private String mobileNo;
 
-    @Column(name = "role_no", unique = true)
+    @Column(name = "roleno", unique = true)
     private String roleNo;
 
     @ManyToMany(mappedBy = "students", cascade = CascadeType.ALL)
     private Set<Subject> subjects = new HashSet<>();
 
-    @Column(name = "class_name")
+    @Column(name = "classname")
     private String className;
 
     @Column(name = "address")
