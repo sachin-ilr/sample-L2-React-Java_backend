@@ -66,32 +66,32 @@ public class StudentMasterService implements BaseService<StudentMaster, StudentM
     private StudentMasterDTO convertToDTO(StudentMaster studentMaster) {
         StudentMasterDTO dto = new StudentMasterDTO();
         dto.setId(studentMaster.getId());
-        dto.setFirstName(studentMaster.getFirstName());
-        dto.setLastName(studentMaster.getLastName());
-        dto.setRoleNo(studentMaster.getRoleNo());
-        dto.setSubjectName(studentMaster.getSubjectName());
-        dto.setStaffName(studentMaster.getStaffName());
-        dto.setSubjectCode(studentMaster.getSubjectCode());
+        dto.setFirstname(studentMaster.getFirstName());
+        dto.setLastname(studentMaster.getLastName());
+        dto.setRoleno(studentMaster.getRoleNo());
+        dto.setSubjectname(studentMaster.getSubjectName());
+        dto.setStaffname(studentMaster.getStaffName());
+        dto.setSubjectcode(studentMaster.getSubjectCode());
         return dto;
     }
 
     private StudentMaster convertToEntity(StudentMasterDTO dto) {
         StudentMaster studentMaster = new StudentMaster();
-        studentMaster.setFirstName(dto.getFirstName());
-        studentMaster.setLastName(dto.getLastName());
-        studentMaster.setRoleNo(dto.getRoleNo());
-        studentMaster.setSubjectName(dto.getSubjectName());
-        studentMaster.setStaffName(dto.getStaffName());
-        studentMaster.setSubjectCode(dto.getSubjectCode());
+        studentMaster.setFirstName(dto.getFirstname());
+        studentMaster.setLastName(dto.getLastname());
+        studentMaster.setRoleNo(dto.getRoleno());
+        studentMaster.setSubjectName(dto.getSubjectname());
+        studentMaster.setStaffName(dto.getStaffname());
+        studentMaster.setSubjectCode(dto.getSubjectcode());
         return studentMaster;
     }
 
     private void updateStudentMasterFromDTO(StudentMaster studentMaster, StudentMasterDTO dto) {
-        studentMaster.setFirstName(dto.getFirstName());
-        studentMaster.setLastName(dto.getLastName());
-        studentMaster.setRoleNo(dto.getRoleNo());
-        studentMaster.setSubjectName(dto.getSubjectName());
-        studentMaster.setStaffName(dto.getStaffName());
-        studentMaster.setSubjectCode(dto.getSubjectCode());
+        studentMaster.setFirstName(dto.getFirstname());
+        studentMaster.setLastName(dto.getLastname());
+        studentMaster.setRoleNo(dto.getRoleno());
+        studentMaster.setSubjectName(dto.getSubjectname());
+        studentMaster.setStaffName(dto.getStaffname());
+        studentMaster.setSubjectCode(dto.getSubjectcode());
     }
 }

@@ -66,32 +66,32 @@ public class StudentsService implements BaseService<Students, StudentsDTO, Integ
     private StudentsDTO convertToDTO(Students students) {
         StudentsDTO dto = new StudentsDTO();
         dto.setId(students.getId());
-        dto.setFirstName(students.getFirstName());
-        dto.setLastName(students.getLastName());
-        dto.setMobileNo(students.getMobileNo());
-        dto.setRoleNo(students.getRoleNo());
-        dto.setClassName(students.getClassName());
+        dto.setFirstname(students.getFirstName());
+        dto.setLastname(students.getLastName());
+        dto.setMobileno(students.getMobileNo());
+        dto.setRoleno(students.getRoleNo());
+        dto.setClassname(students.getClassName());
         dto.setAddress(students.getAddress());
         return dto;
     }
 
     private Students convertToEntity(StudentsDTO dto) {
         Students students = new Students();
-        students.setFirstName(dto.getFirstName());
-        students.setLastName(dto.getLastName());
-        students.setMobileNo(dto.getMobileNo());
-        students.setRoleNo(dto.getRoleNo());
-        students.setClassName(dto.getClassName());
+        students.setFirstName(dto.getFirstname());
+        students.setLastName(dto.getLastname());
+        students.setMobileNo(dto.getMobileno());
+        students.setRoleNo(dto.getRoleno());
+        students.setClassName(dto.getClassname());
         students.setAddress(dto.getAddress());
         return students;
     }
 
     private void updateStudentsFromDTO(Students students, StudentsDTO dto) {
-        students.setFirstName(dto.getFirstName());
-        students.setLastName(dto.getLastName());
-        students.setMobileNo(dto.getMobileNo());
-        students.setRoleNo(dto.getRoleNo());
-        students.setClassName(dto.getClassName());
+        students.setFirstName(dto.getFirstname());
+        students.setLastName(dto.getLastname());
+        students.setMobileNo(dto.getMobileno());
+        students.setRoleNo(dto.getRoleno());
+        students.setClassName(dto.getClassname());
         students.setAddress(dto.getAddress());
     }
 }
